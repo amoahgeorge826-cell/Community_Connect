@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <form data-otp-autosubmit>
+        <input autocomplete="one-time-code" value="012345">
+        <button type="submit">Verify</button>
+    </form>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            event.currentTarget.dataset.submitted = 'true';
+            event.currentTarget.dataset.submittedAt = performance.now().toString();
+        });
+        new MutationObserver(() => {
+            if (form.dataset.otpSubmitting === 'true' && !form.dataset.startedAt) {
+                form.dataset.startedAt = performance.now().toString();
+            }
+        }).observe(form, { attributes: true, attributeFilter: ['data-otp-submitting'] });
+    </script>
+</body>
+</html>
